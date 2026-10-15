@@ -1,6 +1,6 @@
 # practice-session-2
 
-Computational study of the **chromatic number of the natural central digraph G(ℤₖ)** for k = 3 to 10.
+Computational study of the **chromatic number of the natural central digraph G(ℤₖ)** for k = 3 to 13.
 
 Reference: Rawat & Sehgal (2026).
 
@@ -25,6 +25,9 @@ The vertices (p, 0) have self-loops, because (p, 0) → (p, 0). Every computatio
 | 8 | 64 | 476 | 14–15 | 3 | 16 | 4.00 | **6** |
 | 9 | 81 | 684 | 16–17 | 3 | 20 | 4.05 | **6** |
 | 10 | 100 | 945 | 18–19 | 3 | 25 | 4.00 | **6** |
+| 11 | 121 | 1,265 | 20–21 | 3 | 30 | 4.03 | **7** |
+| 12 | 144 | 1,650 | 22–23 | 3 | 36 | 4.00 | **7** |
+| 13 | 169 | 2,106 | 24–25 | 3 | 42 | 4.02 | **7** |
 
 **The conjecture χ(G(ℤₖ)) = 5 for all k ≥ 4 is false.** The values for k = 4, 5 and 6 suggested that χ settles at 5, but G(ℤ₇) is not 5-colourable, so χ(G(ℤ₇)) = 6.
 
@@ -38,16 +41,25 @@ Evidence for k = 7:
 
 **k = 9 also has χ = 6.** `chromatic_z9.py` uses a SAT solver instead of DSATUR. The solver proves the 5-colouring problem has no solution (UNSAT) and returns a 6-colouring, which the script checks edge by edge. Its class sizes are 9, 16, 13, 15, 13, 15.
 
-**k = 10 also has χ = 6.** `chromatic_z10.py` uses the same SAT method, proves 5 colours are impossible, and returns a verified 6-colouring with class sizes 10, 17, 20, 14, 19, 20. As with k = 8, n/α = 100/25 = 4 gives only χ ≥ 4. So far χ = 6 for k = 7, 8, 9 and 10.
+**k = 10 also has χ = 6.** `chromatic_z10.py` uses the same SAT method, proves 5 colours are impossible, and returns a verified 6-colouring with class sizes 10, 17, 20, 14, 19, 20. As with k = 8, n/α = 100/25 = 4 gives only χ ≥ 4. So χ = 6 for k = 7, 8, 9 and 10 — but this plateau does not continue.
 
-## Properties seen for every k from 3 to 10
+**χ jumps to 7 at k = 11, and stays there through k = 13.** `chromatic_z11.py`, `chromatic_z12.py` and `chromatic_z13.py` use a different method, because at 121+ vertices exhaustive DSATUR is too slow and the SAT solver cannot resolve 6-colourability either way within a practical conflict budget:
+
+- **TabuCol** (a tabu-search local-search heuristic) finds a proper 7-colouring for each of k = 11, 12, 13 in well under 1,000 iterations.
+- Across 20 independent seeds (10,000,000 total iterations) TabuCol never finds a 6-colouring for any of the three graphs — it consistently gets stuck at a handful of unresolved edge conflicts.
+- A SAT solver (CaDiCaL) independently confirms each 7-colouring is valid in under 0.02 s. The matching 6-colourability question is SAT-encoded too, but CaDiCaL exhausts tens of millions of conflicts without resolving it either way, so the lower bound χ ≥ 7 rests on the heuristic evidence above rather than a formal UNSAT proof.
+
+So the upper bound χ ≤ 7 is rigorous for k = 11, 12, 13 (SAT-verified colourings); the lower bound χ ≥ 7 (i.e. that 6 colours are not enough) is strong heuristic evidence, not a proof. Quick TabuCol runs (3 seeds, lighter iteration budget) through k = 20 suggest 7 colours continue to suffice and 6 continue to fail, but these have not been checked as rigorously as k = 11–13 and are not included in the table above.
+
+## Properties seen for every k from 3 to 13
 
 - **Connected:** the undirected graph is always connected.
 - **ω = 3:** it always contains triangles but never a K₄. So the clique number gives only χ ≥ 3, far below the true values.
 - **Near-regular:** every vertex has degree 2k − 2 or 2k − 1.
-- **Edge count:** |E| = 21, 54, 110, 195, 315, 476, 684, 945 for k = 3 to 10.
+- **Edge count:** |E| = 21, 54, 110, 195, 315, 476, 684, 945, 1265, 1650, 2106 for k = 3 to 13.
 - **Self-loops** in the digraph are exactly at (p, 0) for p ∈ ℤ/kℤ.
-- **Independence bound:** χ ≥ ⌈n/α⌉. This gives χ ≥ 5 for k = 5, 7 and 9, and χ ≥ 4 for k = 4, 6, 8 and 10.
+- **Independence number:** α(G(ℤₖ)) = k²/4 for even k, and (k² − 1)/4 for odd k, for every k tested (3 to 13).
+- **Independence bound:** χ ≥ ⌈n/α⌉. This never exceeds ⌈4.17⌉ = 5, far below the true χ = 7 seen from k = 11.
 - **Greedy colouring is a poor guide:** greedy strategies need 5 to 11 colours, well above the true χ.
 
 ## Chromatic polynomials
@@ -76,6 +88,9 @@ Its values are P(0) through P(3) = 0, P(4) = 48, P(5) = 6,360, P(6) = 120,240 an
 | `chromatic_z8.py` | Same search as `chromatic_z7.py`, for k = 8 | ~50 s |
 | `chromatic_z9.py` | SAT encoding solved with CaDiCaL (`python-sat`), triangle fixed to colours 0–2 for symmetry breaking, then checks the 6-colouring it returns | ~1 s |
 | `chromatic_z10.py` | Same SAT method as `chromatic_z9.py`, for k = 10 | ~2 s |
+| `chromatic_z11.py` | TabuCol local search for 7- and 6-colourings (multi-seed), plus SAT cross-check of the 7-colouring | ~1–2 min |
+| `chromatic_z12.py` | Same TabuCol + SAT method as `chromatic_z11.py`, for k = 12 | ~1–2 min |
+| `chromatic_z13.py` | Same TabuCol + SAT method as `chromatic_z11.py`, for k = 13 | ~1–2 min |
 | `Chromatic Invariants of G(Zk).html` | Summary report: table of invariants, the refuted conjecture, polynomials | n/a |
 
 \*Measured on a single CPU core. None of the scripts use the GPU.
@@ -93,13 +108,23 @@ Both techniques keep the search exhaustive. A "not K-colourable" result is there
 
 At 81 vertices the pure-Python DSATUR search becomes too slow, so `chromatic_z9.py` and `chromatic_z10.py` write "G is K-colourable" as a Boolean formula. Variable x(v, c) means vertex v gets colour c. The clauses say every vertex has exactly one colour and adjacent vertices never share one. One triangle is fixed to colours 0, 1, 2, which is safe because colours are interchangeable. If the CaDiCaL solver answers UNSAT, that proves no K-colouring exists; if it answers SAT, it returns a colouring, which the script checks independently.
 
+### How the k = 11, 12 and 13 TabuCol searches work
+
+At 121+ vertices, neither exhaustive DSATUR nor a direct SAT proof of non-colourability finishes in practical time, so `chromatic_z11.py`, `chromatic_z12.py` and `chromatic_z13.py` switch to **TabuCol**, a standard local-search metaheuristic:
+
+1. Start from a random K-colouring and track, for every vertex v and colour c, `gamma[v][c]` — the number of v's neighbours currently coloured c. A vertex is in conflict when `gamma[v][color[v]] > 0`.
+2. At each step, recolour a conflicted vertex with the move that cuts the most conflicts, breaking ties randomly. A short-term "tabu" list blocks immediately reversing a move, forcing the search to explore, with an aspiration rule that allows a tabu move anyway if it would beat the best solution seen.
+3. Stop when the conflict count reaches 0 (a proper colouring found) or the iteration budget is exhausted.
+
+This finds 7-colourings for k = 11, 12, 13 almost immediately, but across 20 seeds and 10 million total iterations never finds a 6-colouring — strong but non-exhaustive evidence that 6 colours do not suffice. Unlike the DSATUR and SAT-UNSAT results for k ≤ 10, this is a heuristic lower bound, not a proof.
+
 ## Running
 
-Requirements: Python 3, `numpy` and `networkx`. `chromatic_z9.py` and `chromatic_z10.py` also need `python-sat`.
+Requirements: Python 3, `numpy` and `networkx`. `chromatic_z9.py` through `chromatic_z13.py` also need `python-sat`.
 
 ```bash
 pip install numpy networkx python-sat
-python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z10.py
+python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z13.py
 ```
 
 ## Changes in the second revision
@@ -122,8 +147,15 @@ python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z10.py
 
 - **Added `chromatic_z10.py`.** It uses the SAT solver and confirms χ(G(ℤ₁₀)) = 6.
 
+## Changes in the sixth revision
+
+- **Added `chromatic_z11.py`, `chromatic_z12.py`, `chromatic_z13.py`.** These settle the open question "does χ stay at 6 for k ≥ 11?" — no. χ jumps to 7 at k = 11 and holds through k = 13, using TabuCol local search (heuristic lower bound) cross-checked by SAT (rigorous upper bound).
+- χ(G(ℤₖ)) now grows in a staircase: 4 (k=3) → 5 (k=4–6) → 6 (k=7–10) → 7 (k=11–13+), with each plateau so far longer than the last.
+
 ## Open questions
 
-- Find χ(G(ℤₖ)) for k ≥ 11, and work out whether χ stays at 6 or keeps growing.
-- Explain structurally why G(ℤ₇) to G(ℤ₁₀) need 6 colours when their largest clique has only 3 vertices.
+- Find χ(G(ℤₖ)) for k ≥ 14, and work out whether χ stays at 7 or keeps growing. Quick, lighter-budget TabuCol runs through k = 20 suggest it stays at 7, but this has not been checked as rigorously as k = 11–13.
+- Turn the k = 11–13 lower bound χ ≥ 7 from strong heuristic evidence into a formal proof (either a SAT/UNSAT certificate for 6-colourability, or a structural argument).
+- Explain structurally why G(ℤ₇) to G(ℤ₁₀) need 6 colours, and G(ℤ₁₁) to G(ℤ₁₃) need 7, when their largest clique has only 3 vertices.
+- Find a formula or pattern for where the next jump in χ occurs (jumps so far are at k = 4, 7, 11 — gaps of 3, then 4; is the next gap 5, at k = 16?).
 - Compute the full chromatic polynomial for k = 4.
