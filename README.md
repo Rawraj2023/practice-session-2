@@ -1,6 +1,6 @@
 # practice-session-2
 
-Computational study of the **chromatic number of the natural central digraph G(ℤₖ)** for k = 3 to 7.
+Computational study of the **chromatic number of the natural central digraph G(ℤₖ)** for k = 3 to 8.
 
 Reference: Rawat & Sehgal (2026).
 
@@ -22,6 +22,7 @@ The vertices (p, 0) have self-loops, because (p, 0) → (p, 0). Every computatio
 | 5 | 25 | 110 | 8–9   | 3 | 6  | 4.17 | **5** |
 | 6 | 36 | 195 | 10–11 | 3 | 9  | 4.00 | **5** |
 | 7 | 49 | 315 | 12–13 | 3 | 12 | 4.08 | **6** |
+| 8 | 64 | 476 | 14–15 | 3 | 16 | 4.00 | **6** |
 
 **The conjecture χ(G(ℤₖ)) = 5 for all k ≥ 4 is false.** The values for k = 4, 5 and 6 suggested that χ settles at 5, but G(ℤ₇) is not 5-colourable, so χ(G(ℤ₇)) = 6.
 
@@ -31,17 +32,17 @@ Evidence for k = 7:
 - The same search finds a proper 6-colouring, which the script checks edge by edge. Its colour classes have sizes 9, 10, 8, 7, 7, 8.
 - An independent check with a SAT solver (CaDiCaL, via `python-sat`) gives the same answer. It also reproduces χ = 4, 5, 5, 5 for k = 3 to 6.
 
-The SAT check also gives **χ(G(ℤ₈)) = 6**, which suggests χ grows with k. This repository has no k = 8 script yet, so treat that value as unverified here.
+**k = 8 also has χ = 6.** `chromatic_z8.py` proves G(ℤ₈) is not 5-colourable (374,084 search nodes, about 12 s) and finds a valid 6-colouring with class sizes 13, 13, 11, 9, 9, 9. The SAT solver agrees. Here n/α = 64/16 = 4 gives only χ ≥ 4, so the jump to 6 cannot be explained by independence counting alone.
 
-## Properties seen for every k from 3 to 7
+## Properties seen for every k from 3 to 8
 
 - **Connected:** the undirected graph is always connected.
 - **ω = 3:** it always contains triangles but never a K₄. So the clique number gives only χ ≥ 3, far below the true values.
 - **Near-regular:** every vertex has degree 2k − 2 or 2k − 1.
-- **Edge count:** |E| = 21, 54, 110, 195, 315 for k = 3 to 7.
+- **Edge count:** |E| = 21, 54, 110, 195, 315, 476 for k = 3 to 8.
 - **Self-loops** in the digraph are exactly at (p, 0) for p ∈ ℤ/kℤ.
-- **Independence bound:** χ ≥ ⌈n/α⌉. This gives χ ≥ 5 for k = 5 and k = 7, and χ ≥ 4 for k = 4 and k = 6.
-- **Greedy colouring is a poor guide:** greedy strategies need 5 to 8 colours, well above the true χ.
+- **Independence bound:** χ ≥ ⌈n/α⌉. This gives χ ≥ 5 for k = 5 and k = 7, and χ ≥ 4 for k = 4, 6 and 8.
+- **Greedy colouring is a poor guide:** greedy strategies need 5 to 9 colours, well above the true χ.
 
 ## Chromatic polynomials
 
@@ -66,13 +67,14 @@ Its values are P(0) through P(3) = 0, P(4) = 48, P(5) = 6,360, P(6) = 120,240 an
 | `chromatic_z5.py` | As above, with vertices ordered by degree (highest first) to prune the search | ~1 s |
 | `chromatic_z6.py` | Backtracking with forward checking, then checks the 5-colouring it found | ~2 s |
 | `chromatic_z7.py` | Exhaustive DSATUR search with colour-symmetry breaking, then checks the 6-colouring it found | ~3 s |
+| `chromatic_z8.py` | Same search as `chromatic_z7.py`, for k = 8 | ~50 s |
 | `Chromatic Invariants of G(Zk).html` | Summary report: table of invariants, the refuted conjecture, polynomials | n/a |
 
 \*Measured on a single CPU core. None of the scripts use the GPU.
 
-### How the k = 7 search works
+### How the k = 7 and k = 8 searches work
 
-The fixed-order backtracking used for k ≤ 6 does not scale to 49 vertices, so `chromatic_z7.py` adds two techniques:
+The fixed-order backtracking used for k ≤ 6 does not scale to 49 or 64 vertices, so `chromatic_z7.py` and `chromatic_z8.py` add two techniques:
 
 1. **DSATUR branching.** The next vertex to colour is the uncoloured vertex whose neighbours already use the most distinct colours. Ties go to the vertex with the higher degree. This finds contradictions early.
 2. **Colour-symmetry breaking.** Colours are interchangeable, so a vertex may use any colour already in play or only the *next* unused colour. This removes up to K! equivalent branches.
@@ -85,7 +87,7 @@ Requirements: Python 3, `numpy` and `networkx`.
 
 ```bash
 pip install numpy networkx
-python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z7.py
+python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z8.py
 ```
 
 ## Changes in the second revision
@@ -96,8 +98,12 @@ python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z7.py
 - **Fixed `chromatic_z3.py`.** Degrees now print as plain integers instead of `np.int64(...)`.
 - **Fixed the HTML report.** The degree claim was wrong: it said "k−1 or k" where the correct values are "2k−2 or 2k−1". The report also now has the k = 7 result, a conjecture section stating that the conjecture fails at k = 7, and P(6) for ℤ₄.
 
+## Changes in the third revision
+
+- **Added `chromatic_z8.py`.** It confirms χ(G(ℤ₈)) = 6.
+
 ## Open questions
 
-- Find χ(G(ℤₖ)) for k ≥ 8, add a script that confirms χ(G(ℤ₈)) = 6, and work out how χ grows with k.
-- Explain structurally why G(ℤ₇) needs 6 colours when its largest clique has only 3 vertices.
+- Find χ(G(ℤₖ)) for k ≥ 9, and work out whether χ stays at 6 or keeps growing.
+- Explain structurally why G(ℤ₇) and G(ℤ₈) need 6 colours when their largest clique has only 3 vertices.
 - Compute the full chromatic polynomial for k = 4.

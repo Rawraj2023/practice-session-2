@@ -351,28 +351,39 @@ footer {
         <td class="chi-cell"><span class="chi-known">6</span></td>
         <td><span class="badge badge-confirmed">confirmed</span></td>
       </tr>
+      <tr>
+        <td>ℤ₈</td>
+        <td>64</td>
+        <td>476</td>
+        <td>Yes</td>
+        <td>3</td>
+        <td>16</td>
+        <td>4.00</td>
+        <td class="chi-cell"><span class="chi-known">6</span></td>
+        <td><span class="badge badge-confirmed">confirmed</span></td>
+      </tr>
     </tbody>
   </table>
 </div>
 
 <div class="conjecture">
-  <h2>Conjecture refuted at k = 7</h2>
-  <p>The data for k = 3–6 suggested that χ stabilizes at 5 for all k ≥ 4. The exhaustive search for k = 7 shows this is false:</p>
+  <h2>Conjecture refuted at k = 7 and k = 8</h2>
+  <p>The data for k = 3–6 suggested that χ stabilizes at 5 for all k ≥ 4. The exhaustive searches for k = 7 and k = 8 show this is false:</p>
   <code class="formula">χ(G(ℤₖ)) = 4        if k = 3
 χ(G(ℤₖ)) = 5        if k = 4, 5, 6
-χ(G(ℤₖ)) = 6        if k = 7</code>
-  <p style="margin-top:10px; font-size:0.85rem; color:var(--fg2);">G(ℤ₇) is not 5-colourable (exhaustive DSATUR search, chromatic_z7.py; independently confirmed with a SAT solver), and an explicit proper 6-colouring exists. So χ is not constant for k ≥ 4.</p>
+χ(G(ℤₖ)) = 6        if k = 7, 8</code>
+  <p style="margin-top:10px; font-size:0.85rem; color:var(--fg2);">G(ℤ₇) and G(ℤ₈) are not 5-colourable (exhaustive DSATUR search, chromatic_z7.py and chromatic_z8.py; independently confirmed with a SAT solver), and explicit proper 6-colourings exist. So χ is not constant for k ≥ 4.</p>
 </div>
 
 <div class="notes">
-  <h2>Universal properties (all k ≥ 3)</h2>
+  <h2>Properties observed for k = 3–8</h2>
   <ul>
     <li><strong>ω = 3</strong>: the graph always contains triangles but no K₄ (independent of k)</li>
     <li><strong>Connected</strong>: the underlying undirected graph is always connected</li>
     <li><strong>Girth 3</strong>: odd cycles present; prevents 2-coloring</li>
     <li><strong>Self-loops</strong> at (p, 0) for p ∈ ℤ/kℤ (removed for undirected graph)</li>
     <li><strong>Degree</strong>: vertices have degree 2k−2 or 2k−1 (near-regular)</li>
-    <li><strong>n/α ≈ 4</strong>: since χ ≥ ⌈n/α⌉, this gives χ ≥ 4 for k ≥ 4 (χ ≥ 5 when k = 5, 7)</li>
+    <li><strong>n/α ≈ 4</strong>: since χ ≥ ⌈n/α⌉, this gives χ ≥ 4 for k ≥ 4 (χ ≥ 5 when k = 5, 7; only χ ≥ 4 when k = 8)</li>
   </ul>
 </div>
 
@@ -408,7 +419,7 @@ footer {
   </div>
 
   <div class="poly-card" style="border-color:var(--unknown); opacity:0.8;">
-    <div class="poly-label" style="color:var(--unknown);">P(G(ℤ₅)), P(G(ℤ₆)), P(G(ℤ₇))</div>
+    <div class="poly-label" style="color:var(--unknown);">P(G(ℤ₅)) to P(G(ℤ₈))</div>
     <div class="poly-expr">Full chromatic polynomials not yet computed (graph density makes deletion-contraction infeasible without specialized software).</div>
   </div>
 </div>
