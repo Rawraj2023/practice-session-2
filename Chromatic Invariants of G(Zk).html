@@ -1,0 +1,418 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Chromatic Invariants of G(Zk)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Single-column data table layout */
+:root {
+  --bg:      #f7f7f5;
+  --bg2:     #eeecea;
+  --fg:      #1a1917;
+  --fg2:     #5a5855;
+  --border:  #d0cdc9;
+  --acc:     #2a5f8f;
+  --acc2:    #c84b2a;
+  --known:   #1e6b3a;
+  --unknown: #7a5a00;
+  --mono:    "IBM Plex Mono", "Courier New", monospace;
+  --sans:    "IBM Plex Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:      #141210;
+    --bg2:     #1e1c1a;
+    --fg:      #e8e4df;
+    --fg2:     #948e87;
+    --border:  #2e2c29;
+    --acc:     #5b9fd6;
+    --acc2:    #e07050;
+    --known:   #4caf7a;
+    --unknown: #d4a830;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:      #141210;
+  --bg2:     #1e1c1a;
+  --fg:      #e8e4df;
+  --fg2:     #948e87;
+  --border:  #2e2c29;
+  --acc:     #5b9fd6;
+  --acc2:    #e07050;
+  --known:   #4caf7a;
+  --unknown: #d4a830;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  padding-inline: 20px;
+  padding-block: 32px 48px;
+  max-width: 860px;
+  margin-inline: auto;
+}
+
+header {
+  border-bottom: 2px solid var(--acc);
+  padding-block-end: 16px;
+  margin-block-end: 28px;
+}
+
+header h1 {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--acc);
+  margin: 0 0 4px;
+  text-wrap: balance;
+}
+
+header p {
+  color: var(--fg2);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.math-label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--fg2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-block-end: 10px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin-block-end: 32px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 560px;
+  font-variant-numeric: tabular-nums;
+}
+
+thead tr {
+  background: var(--bg2);
+  border-bottom: 1.5px solid var(--border);
+}
+
+th {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg2);
+  padding: 10px 14px;
+  text-align: right;
+  white-space: nowrap;
+}
+th:first-child { text-align: left; }
+
+td {
+  padding: 9px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: var(--acc);
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg2); }
+
+.chi-known {
+  color: var(--known);
+  font-weight: 600;
+}
+.chi-range {
+  color: var(--unknown);
+  font-weight: 600;
+}
+.chi-cell {
+  font-size: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.03em;
+}
+.badge-confirmed {
+  background: color-mix(in srgb, var(--known) 15%, transparent);
+  color: var(--known);
+}
+.badge-partial {
+  background: color-mix(in srgb, var(--unknown) 15%, transparent);
+  color: var(--unknown);
+}
+
+.notes {
+  background: var(--bg2);
+  border-left: 3px solid var(--acc);
+  padding: 14px 18px;
+  border-radius: 0 4px 4px 0;
+  margin-block-end: 28px;
+}
+.notes h2 {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--acc);
+  margin: 0 0 8px;
+}
+.notes ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--fg);
+  font-size: 0.875rem;
+}
+.notes li { margin-block-end: 5px; }
+.notes li:last-child { margin-block-end: 0; }
+
+.conjecture {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-block-end: 28px;
+}
+.conjecture h2 {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--acc2);
+  margin: 0 0 8px;
+}
+.conjecture p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+.formula {
+  font-family: var(--mono);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 10px 14px;
+  margin-block: 10px 0;
+  font-size: 0.88rem;
+  color: var(--fg);
+  display: block;
+}
+
+.poly-section h2 {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg2);
+  margin: 0 0 12px;
+}
+
+.poly-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-block-end: 10px;
+}
+.poly-label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--acc);
+  font-weight: 600;
+  margin-block-end: 4px;
+}
+.poly-expr {
+  font-family: var(--mono);
+  font-size: 0.83rem;
+  color: var(--fg);
+  line-height: 1.5;
+  word-break: break-all;
+}
+.poly-evals {
+  margin-block-start: 8px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--fg2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+.poly-evals span { white-space: nowrap; }
+.poly-evals .nonzero { color: var(--known); }
+
+footer {
+  border-top: 1px solid var(--border);
+  padding-block-start: 16px;
+  font-size: 0.8rem;
+  color: var(--fg2);
+  font-family: var(--mono);
+}
+</style>
+
+<header>
+  <h1>Chromatic Invariants of G(ℤ<sub>k</sub>)</h1>
+  <p>Underlying undirected graph of the natural central digraph G(k, 1, 1) — computed October 2026</p>
+</header>
+
+<div class="math-label">Graph invariants by k</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th>|V| = k²</th>
+        <th>|E|</th>
+        <th>Connected</th>
+        <th>ω (clique)</th>
+        <th>α (indep.)</th>
+        <th>n/α</th>
+        <th>χ (chromatic)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ℤ₃</td>
+        <td>9</td>
+        <td>21</td>
+        <td>Yes</td>
+        <td>3</td>
+        <td>3</td>
+        <td>3.00</td>
+        <td class="chi-cell"><span class="chi-known">4</span></td>
+        <td><span class="badge badge-confirmed">confirmed</span></td>
+      </tr>
+      <tr>
+        <td>ℤ₄</td>
+        <td>16</td>
+        <td>54</td>
+        <td>Yes</td>
+        <td>3</td>
+        <td>4</td>
+        <td>4.00</td>
+        <td class="chi-cell"><span class="chi-known">5</span></td>
+        <td><span class="badge badge-confirmed">confirmed</span></td>
+      </tr>
+      <tr>
+        <td>ℤ₅</td>
+        <td>25</td>
+        <td>110</td>
+        <td>Yes</td>
+        <td>3</td>
+        <td>6</td>
+        <td>4.17</td>
+        <td class="chi-cell"><span class="chi-known">5</span></td>
+        <td><span class="badge badge-confirmed">confirmed</span></td>
+      </tr>
+      <tr>
+        <td>ℤ₆</td>
+        <td>36</td>
+        <td>195</td>
+        <td>Yes</td>
+        <td>3</td>
+        <td>9</td>
+        <td>4.00</td>
+        <td class="chi-cell"><span class="chi-known">5</span></td>
+        <td><span class="badge badge-confirmed">confirmed</span></td>
+      </tr>
+      <tr>
+        <td>ℤ₇</td>
+        <td>49</td>
+        <td>315</td>
+        <td>Yes</td>
+        <td>3</td>
+        <td>12</td>
+        <td>4.08</td>
+        <td class="chi-cell"><span class="chi-range">5 or 6</span></td>
+        <td><span class="badge badge-partial">partial</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="conjecture">
+  <h2>Conjecture</h2>
+  <p>Based on computational evidence, the chromatic number of the natural central digraph G(ℤ<sub>k</sub>) satisfies:</p>
+  <code class="formula">χ(G(ℤₖ)) = 4        if k = 3
+χ(G(ℤₖ)) = 5        if k ≥ 4  (conjectured)</code>
+  <p style="margin-top:10px; font-size:0.85rem; color:var(--fg2);">Equivalently: χ = k+1 at k=3; χ stabilizes at 5 for all k ≥ 4.</p>
+</div>
+
+<div class="notes">
+  <h2>Universal properties (all k ≥ 3)</h2>
+  <ul>
+    <li><strong>ω = 3</strong>: the graph always contains triangles but no K₄ (independent of k)</li>
+    <li><strong>Connected</strong>: the underlying undirected graph is always connected</li>
+    <li><strong>Girth 3</strong>: odd cycles present; prevents 2-coloring</li>
+    <li><strong>Self-loops</strong> at (p, 0) for p ∈ ℤ/kℤ (removed for undirected graph)</li>
+    <li><strong>Degree</strong>: vertices have degree k−1 or k (near-regular)</li>
+    <li><strong>n/α ≈ 4</strong>: fractional chromatic number bounds χ ≥ 4 for k ≥ 4</li>
+  </ul>
+</div>
+
+<div class="poly-section">
+  <h2>Chromatic polynomials (computed)</h2>
+
+  <div class="poly-card">
+    <div class="poly-label">P(G(ℤ₃), t)</div>
+    <div class="poly-expr">t⁹ − 21t⁸ + 196t⁷ − 1061t⁶ + 3625t⁵ − 7932t⁴ + 10722t³ − 8062t² + 2532t</div>
+    <div class="poly-evals">
+      <span>P(0) = 0</span>
+      <span>P(1) = 0</span>
+      <span>P(2) = 0</span>
+      <span>P(3) = 0</span>
+      <span class="nonzero">P(4) = 48</span>
+      <span class="nonzero">P(5) = 6360</span>
+      <span class="nonzero">P(6) = 120240</span>
+    </div>
+  </div>
+
+  <div class="poly-card">
+    <div class="poly-label">P(G(ℤ₄), t) — evaluations only</div>
+    <div class="poly-expr">Degree-16 polynomial. Full coefficients require extended computation.</div>
+    <div class="poly-evals">
+      <span>P(0) = 0</span>
+      <span>P(1) = 0</span>
+      <span>P(2) = 0</span>
+      <span>P(3) = 0</span>
+      <span>P(4) = 0</span>
+      <span class="nonzero">P(5) = 41040</span>
+    </div>
+  </div>
+
+  <div class="poly-card" style="border-color:var(--unknown); opacity:0.8;">
+    <div class="poly-label" style="color:var(--unknown);">P(G(ℤ₅)), P(G(ℤ₆)), P(G(ℤ₇))</div>
+    <div class="poly-expr">Full chromatic polynomials not yet computed (graph density makes deletion-contraction infeasible without specialized software).</div>
+  </div>
+</div>
+
+<footer>
+  G(k, 1, 1) — metacyclic central digraph with w = 1 (natural case) · Rawat &amp; Sehgal, 2026
+</footer>
+
+</body></html>
