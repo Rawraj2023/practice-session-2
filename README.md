@@ -1,6 +1,6 @@
 # practice-session-2
 
-Computational study of the **chromatic number of the natural central digraph G(ℤₖ)** for k = 3 to 9.
+Computational study of the **chromatic number of the natural central digraph G(ℤₖ)** for k = 3 to 10.
 
 Reference: Rawat & Sehgal (2026).
 
@@ -24,6 +24,7 @@ The vertices (p, 0) have self-loops, because (p, 0) → (p, 0). Every computatio
 | 7 | 49 | 315 | 12–13 | 3 | 12 | 4.08 | **6** |
 | 8 | 64 | 476 | 14–15 | 3 | 16 | 4.00 | **6** |
 | 9 | 81 | 684 | 16–17 | 3 | 20 | 4.05 | **6** |
+| 10 | 100 | 945 | 18–19 | 3 | 25 | 4.00 | **6** |
 
 **The conjecture χ(G(ℤₖ)) = 5 for all k ≥ 4 is false.** The values for k = 4, 5 and 6 suggested that χ settles at 5, but G(ℤ₇) is not 5-colourable, so χ(G(ℤ₇)) = 6.
 
@@ -35,17 +36,19 @@ Evidence for k = 7:
 
 **k = 8 also has χ = 6.** `chromatic_z8.py` proves G(ℤ₈) is not 5-colourable (374,084 search nodes, about 12 s) and finds a valid 6-colouring with class sizes 13, 13, 11, 9, 9, 9. The SAT solver agrees. Here n/α = 64/16 = 4 gives only χ ≥ 4, so the jump to 6 cannot be explained by independence counting alone.
 
-**k = 9 also has χ = 6.** `chromatic_z9.py` uses a SAT solver instead of DSATUR. The solver proves the 5-colouring problem has no solution (UNSAT) and returns a 6-colouring, which the script checks edge by edge. Its class sizes are 9, 16, 13, 15, 13, 15. So far χ = 6 for k = 7, 8 and 9.
+**k = 9 also has χ = 6.** `chromatic_z9.py` uses a SAT solver instead of DSATUR. The solver proves the 5-colouring problem has no solution (UNSAT) and returns a 6-colouring, which the script checks edge by edge. Its class sizes are 9, 16, 13, 15, 13, 15.
 
-## Properties seen for every k from 3 to 9
+**k = 10 also has χ = 6.** `chromatic_z10.py` uses the same SAT method, proves 5 colours are impossible, and returns a verified 6-colouring with class sizes 10, 17, 20, 14, 19, 20. As with k = 8, n/α = 100/25 = 4 gives only χ ≥ 4. So far χ = 6 for k = 7, 8, 9 and 10.
+
+## Properties seen for every k from 3 to 10
 
 - **Connected:** the undirected graph is always connected.
 - **ω = 3:** it always contains triangles but never a K₄. So the clique number gives only χ ≥ 3, far below the true values.
 - **Near-regular:** every vertex has degree 2k − 2 or 2k − 1.
-- **Edge count:** |E| = 21, 54, 110, 195, 315, 476, 684 for k = 3 to 9.
+- **Edge count:** |E| = 21, 54, 110, 195, 315, 476, 684, 945 for k = 3 to 10.
 - **Self-loops** in the digraph are exactly at (p, 0) for p ∈ ℤ/kℤ.
-- **Independence bound:** χ ≥ ⌈n/α⌉. This gives χ ≥ 5 for k = 5, 7 and 9, and χ ≥ 4 for k = 4, 6 and 8.
-- **Greedy colouring is a poor guide:** greedy strategies need 5 to 10 colours, well above the true χ.
+- **Independence bound:** χ ≥ ⌈n/α⌉. This gives χ ≥ 5 for k = 5, 7 and 9, and χ ≥ 4 for k = 4, 6, 8 and 10.
+- **Greedy colouring is a poor guide:** greedy strategies need 5 to 11 colours, well above the true χ.
 
 ## Chromatic polynomials
 
@@ -72,6 +75,7 @@ Its values are P(0) through P(3) = 0, P(4) = 48, P(5) = 6,360, P(6) = 120,240 an
 | `chromatic_z7.py` | Exhaustive DSATUR search with colour-symmetry breaking, then checks the 6-colouring it found | ~3 s |
 | `chromatic_z8.py` | Same search as `chromatic_z7.py`, for k = 8 | ~50 s |
 | `chromatic_z9.py` | SAT encoding solved with CaDiCaL (`python-sat`), triangle fixed to colours 0–2 for symmetry breaking, then checks the 6-colouring it returns | ~1 s |
+| `chromatic_z10.py` | Same SAT method as `chromatic_z9.py`, for k = 10 | ~2 s |
 | `Chromatic Invariants of G(Zk).html` | Summary report: table of invariants, the refuted conjecture, polynomials | n/a |
 
 \*Measured on a single CPU core. None of the scripts use the GPU.
@@ -85,17 +89,17 @@ The fixed-order backtracking used for k ≤ 6 does not scale to 49 or 64 vertice
 
 Both techniques keep the search exhaustive. A "not K-colourable" result is therefore a proof, not a heuristic.
 
-### How the k = 9 SAT check works
+### How the k = 9 and k = 10 SAT checks work
 
-At 81 vertices the pure-Python DSATUR search becomes too slow, so `chromatic_z9.py` writes "G is K-colourable" as a Boolean formula. Variable x(v, c) means vertex v gets colour c. The clauses say every vertex has exactly one colour and adjacent vertices never share one. One triangle is fixed to colours 0, 1, 2, which is safe because colours are interchangeable. If the CaDiCaL solver answers UNSAT, that proves no K-colouring exists; if it answers SAT, it returns a colouring, which the script checks independently.
+At 81 vertices the pure-Python DSATUR search becomes too slow, so `chromatic_z9.py` and `chromatic_z10.py` write "G is K-colourable" as a Boolean formula. Variable x(v, c) means vertex v gets colour c. The clauses say every vertex has exactly one colour and adjacent vertices never share one. One triangle is fixed to colours 0, 1, 2, which is safe because colours are interchangeable. If the CaDiCaL solver answers UNSAT, that proves no K-colouring exists; if it answers SAT, it returns a colouring, which the script checks independently.
 
 ## Running
 
-Requirements: Python 3, `numpy` and `networkx`. `chromatic_z9.py` also needs `python-sat`.
+Requirements: Python 3, `numpy` and `networkx`. `chromatic_z9.py` and `chromatic_z10.py` also need `python-sat`.
 
 ```bash
 pip install numpy networkx python-sat
-python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z9.py
+python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z10.py
 ```
 
 ## Changes in the second revision
@@ -114,8 +118,12 @@ python chromatic_z3.py   # or chromatic_z4.py ... chromatic_z9.py
 
 - **Added `chromatic_z9.py`.** It uses a SAT solver and confirms χ(G(ℤ₉)) = 6.
 
+## Changes in the fifth revision
+
+- **Added `chromatic_z10.py`.** It uses the SAT solver and confirms χ(G(ℤ₁₀)) = 6.
+
 ## Open questions
 
-- Find χ(G(ℤₖ)) for k ≥ 10, and work out whether χ stays at 6 or keeps growing.
-- Explain structurally why G(ℤ₇), G(ℤ₈) and G(ℤ₉) need 6 colours when their largest clique has only 3 vertices.
+- Find χ(G(ℤₖ)) for k ≥ 11, and work out whether χ stays at 6 or keeps growing.
+- Explain structurally why G(ℤ₇) to G(ℤ₁₀) need 6 colours when their largest clique has only 3 vertices.
 - Compute the full chromatic polynomial for k = 4.
