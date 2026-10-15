@@ -69,7 +69,7 @@ for strategy in ["largest_first", "smallest_last", "DSATUR"]:
 def is_k_colorable(k_col):
     """
     Backtracking with degree-descending order and forward-checking (domain pruning).
-    Returns True if a proper k_col-coloring exists.
+    Returns a proper k_col-coloring as a list, or None if none exists.
     """
     order = sorted(range(n), key=lambda v: -len(adj[v]))
     col = [-1] * n
@@ -99,14 +99,14 @@ def is_k_colorable(k_col):
             col[v] = -1
         return False
 
-    return bt(0)
+    return list(col) if bt(0) else None
 
 print("\nDetermining chromatic number (backtracking + forward checking):")
-chi = None
+chi, coloring = None, None
 for t in range(1, 10):
-    result = is_k_colorable(t)
-    print(f"  {t}-colorable: {result}")
-    if result:
+    coloring = is_k_colorable(t)
+    print(f"  {t}-colorable: {coloring is not None}")
+    if coloring is not None:
         chi = t
         break
 
@@ -126,13 +126,12 @@ print(f"  Fractional chi   : {n/alpha:.3f}")
 print(f"  chi(G(Z6))       : {chi}")
 print()
 print(f"  Observation: chi = {chi} matches chi(G(Z4)) = chi(G(Z5)) = 5.")
-print(f"  Supports conjecture: chi(G(Zk)) = 5 for all k >= 4.")
+print(f"  This does not continue for all k >= 4: chi(G(Z7)) = 6 (see chromatic_z7.py).")
 
-# ── Cross-check: verify a valid 5-coloring exists ────────────────────────────
+# ── Cross-check: verify the coloring found by backtracking ───────────────────
 
-print("\nVerifying explicit 5-coloring (greedy, smallest-last strategy):")
-coloring = nx.coloring.greedy_color(G, strategy="smallest_last")
-num_used = max(coloring.values()) + 1
+print(f"\nVerifying explicit {chi}-coloring (found by backtracking):")
+num_used = len(set(coloring))
 # Check validity
 valid = all(
     coloring[u] != coloring[v]
@@ -141,4 +140,4 @@ valid = all(
 print(f"  Colors used: {num_used}")
 print(f"  Valid proper coloring: {valid}")
 if not valid:
-    print("  WARNING: greedy coloring invalid — falling back to backtracking result.")
+    print("  WARNING: backtracking coloring invalid — chi result is not verified.")

@@ -41,7 +41,7 @@ for i in range(n):
         if i != j and (A[i, j] == 1 or A[j, i] == 1):
             U[i, j] = 1
 
-degrees = list(U.sum(axis=1))
+degrees = [int(d) for d in U.sum(axis=1)]
 total_edges = int(U.sum()) // 2
 print(f"\nUndirected graph: {n} vertices, {total_edges} edges")
 print(f"Degree sequence: {degrees}")

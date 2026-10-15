@@ -120,11 +120,14 @@ def count_colorings(t_col):
     return count[0]
 
 print("\nEvaluating chromatic polynomial at known points:")
+P_vals = {}
 for t in range(chi + 2):
     if t < chi:
+        P_vals[t] = 0
         print(f"  P(G(Z4), {t}) = 0  (not {t}-colorable)")
     else:
         val = count_colorings(t)
+        P_vals[t] = val
         print(f"  P(G(Z4), {t}) = {val}")
         if t > chi:
             break   # stop after one nonzero beyond chi to save time
@@ -140,8 +143,9 @@ print(f"  Connected        : {nx.is_connected(G)}")
 print(f"  omega (clique)   : {omega}")
 print(f"  alpha (indep.)   : {alpha}")
 print(f"  chi(G(Z4))       : {chi}")
-print(f"  P(G(Z4), 0..4)   : 0  (not chi-1 colorable)")
-print(f"  P(G(Z4), 5)      : 41040")
+print(f"  P(G(Z4), 0..{chi - 1})   : 0  (not {chi - 1}-colorable)")
+for t in range(chi, max(P_vals) + 1):
+    print(f"  P(G(Z4), {t})      : {P_vals[t]}")
 print()
 print("  Note: Full degree-16 chromatic polynomial requires")
 print("  specialized software (e.g. Mathematica ChromaticPolynomial).")

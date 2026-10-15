@@ -348,19 +348,20 @@ footer {
         <td>3</td>
         <td>12</td>
         <td>4.08</td>
-        <td class="chi-cell"><span class="chi-range">5 or 6</span></td>
-        <td><span class="badge badge-partial">partial</span></td>
+        <td class="chi-cell"><span class="chi-known">6</span></td>
+        <td><span class="badge badge-confirmed">confirmed</span></td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <div class="conjecture">
-  <h2>Conjecture</h2>
-  <p>Based on computational evidence, the chromatic number of the natural central digraph G(ℤ<sub>k</sub>) satisfies:</p>
+  <h2>Conjecture refuted at k = 7</h2>
+  <p>The data for k = 3–6 suggested that χ stabilizes at 5 for all k ≥ 4. The exhaustive search for k = 7 shows this is false:</p>
   <code class="formula">χ(G(ℤₖ)) = 4        if k = 3
-χ(G(ℤₖ)) = 5        if k ≥ 4  (conjectured)</code>
-  <p style="margin-top:10px; font-size:0.85rem; color:var(--fg2);">Equivalently: χ = k+1 at k=3; χ stabilizes at 5 for all k ≥ 4.</p>
+χ(G(ℤₖ)) = 5        if k = 4, 5, 6
+χ(G(ℤₖ)) = 6        if k = 7</code>
+  <p style="margin-top:10px; font-size:0.85rem; color:var(--fg2);">G(ℤ₇) is not 5-colourable (exhaustive DSATUR search, chromatic_z7.py; independently confirmed with a SAT solver), and an explicit proper 6-colouring exists. So χ is not constant for k ≥ 4.</p>
 </div>
 
 <div class="notes">
@@ -370,8 +371,8 @@ footer {
     <li><strong>Connected</strong>: the underlying undirected graph is always connected</li>
     <li><strong>Girth 3</strong>: odd cycles present; prevents 2-coloring</li>
     <li><strong>Self-loops</strong> at (p, 0) for p ∈ ℤ/kℤ (removed for undirected graph)</li>
-    <li><strong>Degree</strong>: vertices have degree k−1 or k (near-regular)</li>
-    <li><strong>n/α ≈ 4</strong>: fractional chromatic number bounds χ ≥ 4 for k ≥ 4</li>
+    <li><strong>Degree</strong>: vertices have degree 2k−2 or 2k−1 (near-regular)</li>
+    <li><strong>n/α ≈ 4</strong>: since χ ≥ ⌈n/α⌉, this gives χ ≥ 4 for k ≥ 4 (χ ≥ 5 when k = 5, 7)</li>
   </ul>
 </div>
 
@@ -402,6 +403,7 @@ footer {
       <span>P(3) = 0</span>
       <span>P(4) = 0</span>
       <span class="nonzero">P(5) = 41040</span>
+      <span class="nonzero">P(6) = 25536960</span>
     </div>
   </div>
 
