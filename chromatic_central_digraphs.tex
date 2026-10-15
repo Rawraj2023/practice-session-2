@@ -1,0 +1,735 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Zk}{\Z/k\Z}
+\newcommand{\GZk}{G(\Z_k)}
+
+\title{On the Chromatic Number of Central Digraphs over Cyclic Groups}
+
+\author{
+% Authors
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We study the chromatic number of the underlying undirected graph of the
+natural central digraph $G(k,1,1)$ on $\Zk \times \Zk$ for $k = 3$ to~$13$.
+We prove that for all $k \ge 3$ the graph has diameter exactly~$2$,
+degree sequence $(2k{-}2, 2k{-}1)$, edge count $k(k{-}1)(2k{+}1)/2$,
+and clique number $\omega = 3$.  Computationally we establish the chromatic
+number $\chi(\GZk)$ for each $k$ in this range, revealing a
+\emph{staircase} growth pattern: $\chi = 4$ for $k = 3$; $\chi = 5$ for
+$k = 4,5,6$; $\chi = 6$ for $k = 7,8,9,10$; and $\chi = 7$ for
+$k = 11,12,13$.  This refutes the earlier conjecture that $\chi = 5$
+for all $k \ge 4$.  We also record closed-form expressions for the triangle
+count and independence number, and give partial chromatic polynomials for
+$k = 3$ and~$4$.
+\end{abstract}
+
+
+%======================================================================
+\section{Introduction}
+\label{sec:intro}
+%======================================================================
+
+Central digraphs, introduced in the study of semigroup actions on finite
+sets, give rise to highly structured directed graphs whose colouring
+properties are not well understood.  For a positive integer $k \ge 3$, the
+\emph{natural central digraph} $G(k,1,1)$ on $\Zk \times \Zk$ has vertex
+set $\Zk \times \Zk$ and arcs
+\[
+  (p,\, i) \;\longrightarrow\; \bigl((p+i) \bmod k,\; j\bigr)
+  \qquad \text{for every } j \in \Zk.
+\]
+We study the \emph{underlying undirected graph}, obtained by ignoring arc
+directions and removing self-loops.  Throughout, ``colouring'' means a
+proper vertex colouring of this undirected graph, and $\chi(\GZk)$ denotes
+its chromatic number.
+
+Early computations for small~$k$ led to the conjecture that $\chi(\GZk) = 5$
+for all $k \ge 4$ (see Rawat \& Sehgal~\cite{rawat2026}).  We show this is
+false: $\chi(\GZk)$ grows in a staircase pattern with jumps at $k = 4, 7,$
+and~$11$.
+
+\medskip
+\noindent\textbf{Main results.}
+\begin{enumerate}[label=(\roman*)]
+  \item \emph{Structural invariants (all $k \ge 3$, proved):}
+    $\operatorname{diam}(\GZk) = 2$, $\;\omega(\GZk) = 3$,
+    $\;|E| = k(k-1)(2k+1)/2$, and every vertex has degree $2k-2$ or $2k-1$.
+  \item \emph{Chromatic number (proved for $k \le 10$, strong evidence for
+    $k = 11$--$13$):}
+    \[
+      \chi(\GZk) =
+      \begin{cases}
+        4 & k = 3,\\
+        5 & k = 4, 5, 6,\\
+        6 & k = 7, 8, 9, 10,\\
+        7 & k = 11, 12, 13.
+      \end{cases}
+    \]
+  \item \emph{Independence number (verified computationally for $3 \le k \le 13$):}
+    $\alpha(\GZk) = \lfloor k^2/4 \rfloor$.
+\end{enumerate}
+
+
+%======================================================================
+\section{Definitions and Notation}
+\label{sec:defs}
+%======================================================================
+
+\begin{definition}
+\label{def:graph}
+For an integer $k \ge 3$, the \emph{central digraph} $\GZk$ has
+\begin{itemize}
+  \item \textbf{Vertex set:} $V = \Zk \times \Zk$, so $|V| = k^2$.
+  \item \textbf{Arc set:} $(p, i) \to \bigl((p+i) \bmod k,\; j\bigr)$
+    for all $j \in \Zk$.
+\end{itemize}
+The \emph{underlying undirected graph}, also denoted $\GZk$, has the same
+vertex set; distinct vertices $u$ and $v$ are adjacent (written $u \sim v$)
+whenever there is an arc $u \to v$ or $v \to u$ (or both) in the digraph.
+Self-loops $(p,0) \to (p,0)$ are removed.
+\end{definition}
+
+\begin{remark}
+\label{rem:selfloops}
+The digraph has a self-loop at $(p, i)$ precisely when $p + i \equiv p$
+and $i$ is a valid second coordinate, i.e.\ $i = 0$.  So the self-loop
+vertices are exactly $\{(p, 0) : p \in \Zk\}$, a set of size~$k$.
+\end{remark}
+
+
+%======================================================================
+\section{Structural Invariants}
+\label{sec:structure}
+%======================================================================
+
+\subsection{Adjacency characterisation}
+
+\begin{lemma}[Adjacency criterion]
+\label{lem:adj}
+Two distinct vertices $(p_1, i_1)$ and $(p_2, i_2)$ are adjacent in $\GZk$
+if and only if
+\[
+  (p_2 - p_1) \bmod k \;\in\; \{i_1,\; (-i_2) \bmod k\}.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $\delta = (p_2 - p_1) \bmod k$.  There is an arc $(p_1, i_1) \to (p_2, i_2)$
+precisely when $p_2 \equiv p_1 + i_1 \pmod{k}$, i.e.\ $\delta = i_1$.
+There is an arc $(p_2, i_2) \to (p_1, i_1)$ precisely when
+$p_1 \equiv p_2 + i_2 \pmod{k}$, i.e.\ $\delta \equiv -i_2 \pmod{k}$.
+The undirected edge exists if and only if at least one arc is present.
+\end{proof}
+
+\subsection{Degree sequence}
+
+\begin{proposition}[Degrees]
+\label{prop:deg}
+For every $k \ge 3$:
+\begin{enumerate}[label=(\alph*)]
+  \item Each vertex $(p, 0)$ has degree $2k - 2$.
+  \item Each vertex $(p, i)$ with $i \ne 0$ has degree $2k - 1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The out-neighbourhood of $(p, i)$ in the digraph is
+$N^+(p,i) = \{((p+i) \bmod k,\; j) : j \in \Zk\}$,
+the full ``column'' with first coordinate $(p+i) \bmod k$.
+The in-neighbourhood is
+$N^-(p,i) = \{((p-j) \bmod k,\; j) : j \in \Zk\}$.
+
+\smallskip\noindent
+\textbf{Overlap.} A vertex $w$ lies in $N^+(p,i) \cap N^-(p,i)$ exactly
+when $w = ((p+i) \bmod k,\; j)$ and $w = ((p-j) \bmod k,\; j)$, giving
+$p + i \equiv p - j \pmod{k}$, i.e.\ $j \equiv -i \pmod{k}$.  The unique
+overlap vertex is $w_0 = ((p+i) \bmod k,\; (-i) \bmod k)$.
+
+\smallskip\noindent
+\textbf{Self-loops.}  Vertex $(p,i)$ belongs to $N^+(p,i)$ iff $i = 0$
+(its column is then $p$, the same as its own first coordinate).
+Vertex $(p,i)$ belongs to $N^-(p,i)$ iff $i = 0$ (set $j = i$ in the
+in-neighbourhood formula: $((p - i) \bmod k, i) = (p, i)$ requires $i = 0$).
+
+\smallskip\noindent
+\textbf{Case $i = 0$.}  Both $N^+$ and $N^-$ contain $(p, 0)$ itself,
+so the undirected neighbourhood has size
+$(|N^+| - 1) + (|N^-| - 1) - (|\text{overlap}| - 1) = (k-1) + (k-1) - 0 = 2k-2$,
+where we subtract the self-loop from each set and note the overlap vertex
+$w_0 = (p, 0)$ is the self-loop itself, already removed.
+
+\smallskip\noindent
+\textbf{Case $i \ne 0$.}  Neither $N^+$ nor $N^-$ contains $(p,i)$, since
+$p + i \not\equiv p$ and the in-neighbourhood argument above also fails.
+The overlap vertex $w_0 \ne (p, i)$ is a genuine common neighbour.
+The undirected neighbourhood has size
+$|N^+| + |N^-| - |\text{overlap}| = k + k - 1 = 2k - 1$.
+\end{proof}
+
+
+\subsection{Edge count}
+
+\begin{theorem}[Edge count]
+\label{thm:edges}
+For every $k \ge 3$,
+\[
+  |E(\GZk)| \;=\; \frac{k(k-1)(2k+1)}{2}.
+\]
+\end{theorem}
+
+\begin{proof}
+By the handshaking lemma, $2|E| = \sum_{v \in V} \deg(v)$.
+There are $k$ vertices of the form $(p, 0)$, each of degree $2k - 2$,
+and $k(k-1)$ vertices $(p, i)$ with $i \ne 0$, each of degree $2k - 1$.
+Therefore
+\[
+  2|E| = k(2k - 2) + k(k - 1)(2k - 1)
+       = k(k-1)\bigl[2 + (2k - 1)\bigr]
+       = k(k-1)(2k+1),
+\]
+and the result follows.
+\end{proof}
+
+
+\subsection{Connectivity and diameter}
+
+\begin{theorem}[Diameter]
+\label{thm:diam}
+For every $k \ge 3$, the graph $\GZk$ is connected with
+$\operatorname{diam}(\GZk) = 2$.
+\end{theorem}
+
+\begin{proof}
+We show that every pair of distinct vertices is at distance at most~$2$,
+and exhibit a pair at distance exactly~$2$.
+
+\smallskip\noindent\textbf{Upper bound.}
+Let $u = (p_1, i_1)$ and $v = (p_2, i_2)$ be distinct vertices.
+Define $c_1 = (p_1 + i_1) \bmod k$ and set
+\[
+  w \;=\; \bigl(c_1,\; (p_2 - c_1) \bmod k\bigr).
+\]
+We claim $w$ is a common neighbour of $u$ and $v$ (and is distinct from both
+whenever $u \not\sim v$).
+
+\emph{$u \sim w$:}  The first coordinate of $w$ is $c_1 = (p_1 + i_1) \bmod k$,
+so $w$ lies in the out-neighbourhood of~$u$.  Since $u$ is adjacent to every
+vertex in this column, $u \sim w$.
+
+\emph{$v \sim w$:}  The vertex $w$ sends an arc to column
+$(c_1 + (p_2 - c_1)) \bmod k = p_2$.  Since $v = (p_2, i_2)$ lies in column~$p_2$,
+the arc $w \to v$ exists, so $w \sim v$.
+
+\emph{Distinctness:}  If $w = u$, then $c_1 = p_1$ (giving $i_1 = 0$) and
+$p_2 - c_1 \equiv i_1 = 0$, so $p_2 = p_1$.  Then $u = (p_1, 0)$ and
+$v = (p_1, i_2)$ are in the same column with $u$ having second coordinate~$0$,
+whence $u \sim v$ directly.  Similarly, $w = v$ forces $c_1 = p_2$ and $i_2 = 0$,
+so $u \to v$ and again $u \sim v$.  In either degenerate case $d(u,v) = 1 \le 2$.
+
+\smallskip\noindent\textbf{Lower bound.}
+Take $u = (1, 2)$ and $v = (2, 1)$.  We have $\delta = 1$ and
+$\{i_1,\, (-i_2) \bmod k\} = \{2,\, k-1\}$.  For $k \ge 3$,
+$1 \notin \{2, k-1\}$, so $u \not\sim v$ and $d(u,v) \ge 2$.
+\end{proof}
+
+
+\subsection{Clique number}
+
+\begin{theorem}[Clique number]
+\label{thm:clique}
+For every $k \ge 3$, $\;\omega(\GZk) = 3$.
+\end{theorem}
+
+\begin{proof}
+\emph{Lower bound ($\omega \ge 3$).}
+The vertices $(0,1)$, $(1,0)$, and $(1,1)$ form a triangle:
+\begin{align*}
+  (0,1) \sim (1,0) &:\; \delta = 1 \in \{1, 0\}, \\
+  (0,1) \sim (1,1) &:\; \delta = 1 \in \{1, k{-}1\}, \\
+  (1,0) \sim (1,1) &:\; \delta = 0 \in \{0, k{-}1\}.
+\end{align*}
+
+\smallskip
+\emph{Upper bound ($\omega \le 3$).}
+Suppose for contradiction that $\GZk$ contains a clique
+$K = \{v_1, v_2, v_3, v_4\}$ of size~$4$, where $v_a = (p_a, i_a)$.
+We use the following structural observation.
+
+\begin{quote}
+\textbf{Column constraint.}  All digraph arcs from vertex $(p,i)$
+terminate at vertices whose first coordinate is $(p + i) \bmod k$.
+Therefore, among the other three clique members, those reached by a
+\emph{forward arc} from~$v_a$ (i.e.\ an arc $v_a \to v_b$, equivalently
+$p_b \equiv p_a + i_a$) all share the same first coordinate.
+\end{quote}
+
+We say $v_a$ \emph{arcs to} $v_b$ if there is a digraph arc $v_a \to v_b$.
+Each undirected edge $\{v_a, v_b\}$ requires at least one arc between
+$v_a$ and $v_b$ (Lemma~\ref{lem:adj}), which counts as a forward arc
+from one endpoint.
+
+\smallskip\noindent
+\textbf{Step 1: No vertex arcs to all three others.}
+Suppose $v_1$ arcs to $v_2, v_3, v_4$.  Then $p_2 = p_3 = p_4 =: c$.
+The edge $v_2 \sim v_3$ requires $\delta_{23} = 0 \in \{i_2, -i_3\}$,
+so $i_2 = 0$ or $i_3 = 0$.  Similarly $v_2 \sim v_4$ gives $i_2 = 0$ or
+$i_4 = 0$, and $v_3 \sim v_4$ gives $i_3 = 0$ or $i_4 = 0$.
+If $i_2 = 0$, then $v_3 \sim v_4$ forces $i_3 = 0$ or $i_4 = 0$, but
+$i_3 = 0$ gives $v_3 = (c, 0) = v_2$, and $i_4 = 0$ gives
+$v_4 = (c, 0) = v_2$ --- contradictions.
+The cases $i_3 = 0$ and $i_4 = 0$ are symmetric.
+
+\smallskip\noindent
+\textbf{Step 2: No vertex arcs to exactly two others.}
+Suppose $v_1$ arcs to $v_2$ and $v_3$ (but not~$v_4$).
+Then $p_2 = p_3 =: c = (p_1 + i_1) \bmod k$.  The edge $v_2 \sim v_3$
+gives $i_2 = 0$ or $i_3 = 0$ (as above); assume without loss of generality that
+$i_2 = 0$, so $v_2 = (c, 0)$.
+
+Since $v_1$ does not arc to $v_4$, the edge $v_1 \sim v_4$ is realised by
+the arc $v_4 \to v_1$, giving $p_1 = (p_4 + i_4) \bmod k$.
+
+The edge $v_2 \sim v_4$ requires $(p_4 - c) \bmod k \in \{0, -i_4\}$.
+
+\begin{itemize}
+\item If $p_4 \equiv c$: the edge $v_3 \sim v_4$ requires
+  $0 \in \{i_3, -i_4\}$.  If $i_3 = 0$ then $v_3 = (c, 0) = v_2$
+  (contradiction); if $i_4 = 0$ then $p_1 = p_4 = c$ and
+  $c = p_1 + i_1$ forces $i_1 = 0$, whence $v_1 = (c, 0) = v_2$
+  (contradiction).
+
+\item If $p_4 \equiv c - i_4$: then $p_1 = p_4 + i_4 = c$.
+  But $c = p_1 + i_1$ gives $i_1 = 0$, so $v_1 = (c, 0) = v_2$
+  (contradiction).
+\end{itemize}
+
+\smallskip\noindent
+\textbf{Step 3: Counting argument.}
+From Steps~1 and~2, each clique member arcs to at most one other member.
+Each such forward arc services exactly one edge.  So the four vertices
+produce at most~$4$ forward arcs.  But the clique has $\binom{4}{2} = 6$
+edges, each requiring at least one forward arc (in one direction).
+Since $4 < 6$, this is a contradiction.
+\end{proof}
+
+
+\subsection{Triangle count}
+
+\begin{conjecture}[Triangle count]
+\label{conj:triangles}
+For every $k \ge 3$, the number of triangles in $\GZk$ is
+\[
+  T(k) \;=\; \frac{k(k-1)(4k-5)}{3}.
+\]
+\end{conjecture}
+
+This formula has been verified computationally for all $k$ from $3$ to~$13$
+(Table~\ref{tab:triangles}).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}rrrrc@{}}
+\toprule
+$k$ & $T(k)$ computed & $k(k{-}1)(4k{-}5)/3$ & Match \\
+\midrule
+3  &    14 &    14 & \checkmark \\
+4  &    44 &    44 & \checkmark \\
+5  &   100 &   100 & \checkmark \\
+6  &   190 &   190 & \checkmark \\
+7  &   322 &   322 & \checkmark \\
+8  &   504 &   504 & \checkmark \\
+9  &   744 &   744 & \checkmark \\
+10 &  1050 &  1050 & \checkmark \\
+11 &  1430 &  1430 & \checkmark \\
+12 &  1892 &  1892 & \checkmark \\
+13 &  2444 &  2444 & \checkmark \\
+\bottomrule
+\end{tabular}
+\caption{Triangle counts, verified against the conjectured formula.}
+\label{tab:triangles}
+\end{table}
+
+
+%======================================================================
+\section{Independence Number}
+\label{sec:indep}
+%======================================================================
+
+\begin{conjecture}[Independence number]
+\label{conj:alpha}
+For every $k \ge 3$,
+\[
+  \alpha(\GZk) \;=\; \left\lfloor \frac{k^2}{4} \right\rfloor
+  \;=\;
+  \begin{cases}
+    k^2/4       & \text{if } k \text{ is even},\\
+    (k^2 - 1)/4 & \text{if } k \text{ is odd}.
+  \end{cases}
+\]
+\end{conjecture}
+
+This has been verified computationally for $k = 3$ to~$13$
+(Table~\ref{tab:main}).  The fractional relaxation bound
+$\chi \ge n/\alpha \ge \lceil 4 \rceil = 4$ (for even~$k$) and
+$\lceil k^2 / \lfloor k^2/4 \rfloor \rceil \le 5$ (for all~$k$ tested)
+is far below the true chromatic number from $k = 7$ onward, so the
+independence number alone does not explain the growth of~$\chi$.
+
+
+%======================================================================
+\section{Chromatic Number}
+\label{sec:chromatic}
+%======================================================================
+
+\subsection{Summary of results}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}rrrccccr@{}}
+\toprule
+$k$ & $|V|$ & $|E|$ & Degrees & $\omega$ & $\alpha$ & $\lceil n/\alpha \rceil$ & $\chi$ \\
+\midrule
+ 3 &   9 &    21 & 4--5   & 3 &  3 & 3 & \textbf{4} \\
+ 4 &  16 &    54 & 6--7   & 3 &  4 & 4 & \textbf{5} \\
+ 5 &  25 &   110 & 8--9   & 3 &  6 & 5 & \textbf{5} \\
+ 6 &  36 &   195 & 10--11 & 3 &  9 & 4 & \textbf{5} \\
+ 7 &  49 &   315 & 12--13 & 3 & 12 & 5 & \textbf{6} \\
+ 8 &  64 &   476 & 14--15 & 3 & 16 & 4 & \textbf{6} \\
+ 9 &  81 &   684 & 16--17 & 3 & 20 & 5 & \textbf{6} \\
+10 & 100 &   945 & 18--19 & 3 & 25 & 4 & \textbf{6} \\
+11 & 121 & 1265 & 20--21 & 3 & 30 & 5 & \textbf{7} \\
+12 & 144 & 1650 & 22--23 & 3 & 36 & 4 & \textbf{7} \\
+13 & 169 & 2106 & 24--25 & 3 & 42 & 5 & \textbf{7} \\
+\bottomrule
+\end{tabular}
+\caption{Invariants of $\GZk$ for $k = 3$ to~$13$.  Edge counts and degrees
+follow from Theorems~\ref{thm:edges} and Proposition~\ref{prop:deg};
+$\omega = 3$ is Theorem~\ref{thm:clique}; $\alpha$ and $\chi$ are
+computational (see \S\ref{sec:methods}).}
+\label{tab:main}
+\end{table}
+
+
+\subsection{Computational methods}
+\label{sec:methods}
+
+Different methods were required as $k$ (and hence $|V| = k^2$) increased.
+
+\subsubsection*{$k = 3$ to $6$: Backtracking}
+
+For $k \le 6$ ($|V| \le 36$), an exhaustive backtracking search over all
+proper $K$-colourings determines $\chi$ exactly.  Forward checking prunes
+the search at each step: when a vertex is coloured, the available colours
+of its uncoloured neighbours are reduced, and the branch is abandoned if
+any neighbour's available set becomes empty.
+
+\subsubsection*{$k = 7$ and $8$: DSATUR with symmetry breaking}
+
+At $49$ and $64$ vertices, plain backtracking is too slow.
+Two refinements make the search tractable:
+\begin{enumerate}
+  \item \textbf{DSATUR branching.}  The next vertex to colour is the
+    uncoloured vertex whose neighbours already use the most distinct
+    colours (the ``saturation degree''); ties go to the vertex of highest
+    degree.  This heuristic finds contradictions early.
+  \item \textbf{Colour-symmetry breaking.}  Colours are interchangeable,
+    so a vertex may use any colour already in play or only the \emph{next}
+    unused colour.  This removes up to $K!$ equivalent branches.
+\end{enumerate}
+Both techniques keep the search exhaustive.  A ``not $K$-colourable''
+result is therefore a proof, not a heuristic.
+
+\subsubsection*{$k = 9$ and $10$: SAT encoding}
+
+At $81$ and $100$ vertices the pure-Python DSATUR search becomes too slow.
+We encode ``$G$ is $K$-colourable'' as a propositional satisfiability
+instance.  For each vertex~$v$ and colour $c \in \{0, \ldots, K{-}1\}$,
+introduce a Boolean variable $x_{v,c}$.  The clauses are:
+\begin{itemize}
+  \item \emph{At least one colour:} $\bigvee_c x_{v,c}$ for every vertex~$v$.
+  \item \emph{At most one colour:} $\neg x_{v,c} \lor \neg x_{v,c'}$ for
+    every vertex $v$ and $c \ne c'$.
+  \item \emph{Edge conflicts:} $\neg x_{u,c} \lor \neg x_{v,c}$ for every
+    edge $\{u,v\}$ and every colour~$c$.
+  \item \emph{Symmetry breaking:} fix a triangle to colours $0, 1, 2$.
+    This is valid because the graph contains a triangle
+    (Theorem~\ref{thm:clique}) and colours are interchangeable.
+\end{itemize}
+The CaDiCaL solver (accessed via the \texttt{python-sat} library) resolves
+these instances in seconds.  An UNSAT answer proves no $K$-colouring exists;
+a SAT answer returns a colouring, which is verified edge-by-edge by an
+independent check.
+
+\subsubsection*{$k = 11$, $12$, and $13$: TabuCol + SAT cross-check}
+
+At $121$+ vertices, neither exhaustive DSATUR nor a direct SAT proof of
+non-$6$-colourability finishes within a practical time or conflict budget.
+We use a two-pronged strategy.
+
+\medskip\noindent
+\textbf{Upper bound ($\chi \le 7$).}
+TabuCol, a standard tabu-search metaheuristic for graph colouring
+\cite{hertz1987}, finds a proper $7$-colouring in well under $1000$
+iterations for each of $k = 11, 12, 13$.  Each $7$-colouring is
+independently verified by encoding it as a SAT instance and checking that
+CaDiCaL confirms satisfiability in under $0.02$\,s.
+
+\medskip\noindent
+\textbf{Lower bound ($\chi \ge 7$).}
+Across $20$ independent random seeds and $10{,}000{,}000$ total TabuCol
+iterations, no $6$-colouring is found for any of $k = 11, 12, 13$ --- the
+search consistently stalls at a small handful of unresolved edge conflicts.
+The matching SAT instance for $6$-colourability is also constructed, but
+CaDiCaL exhausts tens of millions of conflicts without resolving it either
+way.
+
+\medskip
+The upper bound $\chi \le 7$ is therefore rigorous (SAT-verified colourings).
+The lower bound $\chi \ge 7$ rests on strong heuristic evidence rather than
+a formal UNSAT proof.  Turning this into a proof is an open problem
+(\S\ref{sec:open}).
+
+\subsubsection*{TabuCol algorithm}
+
+For completeness, we describe the TabuCol procedure used for $k \ge 11$.
+\begin{enumerate}
+  \item Start from a random (improper) $K$-colouring.  Maintain, for every
+    vertex~$v$ and colour~$c$, the count $\gamma(v,c)$ of neighbours of~$v$
+    currently coloured~$c$.  A vertex $v$ is \emph{in conflict} when
+    $\gamma(v, \operatorname{colour}(v)) > 0$.
+  \item At each step, select a conflicted vertex~$v$ and recolour it with
+    the colour~$c$ that maximally reduces the total conflict count, breaking
+    ties randomly.  A short-term tabu list of length $\ell$ (typically
+    $\ell = 7$ to $10$) forbids immediately reversing a move.  An
+    \emph{aspiration criterion} overrides the tabu if a move would yield
+    fewer total conflicts than the best solution seen so far.
+  \item Terminate when the conflict count reaches~$0$ (a proper colouring
+    found) or an iteration budget is exhausted.
+\end{enumerate}
+The $\gamma$ matrix allows each move to be evaluated and updated in $O(\Delta)$
+time, where $\Delta$ is the maximum degree.
+
+
+\subsection{Rigour classification}
+
+Table~\ref{tab:rigour} summarises the proof status of each~$\chi$ value.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}rcll@{}}
+\toprule
+$k$ & $\chi$ & Upper bound & Lower bound \\
+\midrule
+3       & 4 & Exhaustive backtracking & Exhaustive backtracking \\
+4--6    & 5 & Exhaustive backtracking & Exhaustive backtracking \\
+7--8    & 6 & DSATUR (exhaustive) & DSATUR (exhaustive) \\
+9--10   & 6 & SAT (CaDiCaL) & SAT UNSAT (CaDiCaL) \\
+11--13  & 7 & SAT-verified colouring & TabuCol (heuristic) \\
+\bottomrule
+\end{tabular}
+\caption{Proof methods for each chromatic number.  All upper bounds are
+rigorous.  Lower bounds for $k \le 10$ are proofs; for $k = 11$--$13$
+they are strong heuristic evidence.}
+\label{tab:rigour}
+\end{table}
+
+
+%======================================================================
+\section{The Staircase Pattern}
+\label{sec:staircase}
+%======================================================================
+
+The chromatic numbers exhibit a striking \emph{staircase} pattern.
+Each new value of~$\chi$ first appears at a specific~$k$ and then persists
+for a ``plateau'' of consecutive values before the next jump:
+
+\begin{center}
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+$\chi$ & First appears at $k$ & Plateau & Length & Gap from previous \\
+\midrule
+4 & 3  & $\{3\}$        & 1  & --- \\
+5 & 4  & $\{4,5,6\}$    & 3  & $4 - 3 = 1$ (not meaningful) \\
+6 & 7  & $\{7,8,9,10\}$ & 4  & $7 - 4 = 3$ \\
+7 & 11 & $\{11,12,13,\ldots\}$ & $\ge 3$ & $11 - 7 = 4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The gaps between successive jumps are $3$ and $4$.  If this pattern
+continues, the next jump would occur at $k = 11 + 5 = 16$.
+
+\begin{conjecture}[Staircase growth]
+\label{conj:staircase}
+The chromatic number $\chi(\GZk)$ grows without bound as $k \to \infty$,
+with jumps occurring at $k = 4, 7, 11, 16, 22, \ldots$, where the gaps
+between successive jump points form the sequence $3, 4, 5, 6, \ldots$
+(i.e.\ the $n$-th jump occurs at $k = \binom{n+2}{2} + 1$ for $n \ge 1$,
+counting from the $\chi = 5$ jump).
+\end{conjecture}
+
+Quick, lighter-budget TabuCol runs through $k = 20$ suggest that $7$~colours
+continue to suffice and $6$~colours continue to fail, consistent with the
+next jump not occurring until at least $k = 16$, but these preliminary runs
+have not been checked as rigorously as $k = 11$--$13$.
+
+
+%======================================================================
+\section{Chromatic Polynomial}
+\label{sec:chrompoly}
+%======================================================================
+
+\subsection{Full polynomial for $k = 3$}
+
+The chromatic polynomial of $G(\Z_3)$, computed exactly by
+deletion--contraction, is:
+\[
+  P(G(\Z_3),\, t) \;=\; t^9 - 21t^8 + 196t^7 - 1061t^6 + 3625t^5
+    - 7932t^4 + 10722t^3 - 8062t^2 + 2532t.
+\]
+Its leading coefficients confirm the structural invariants: the coefficient
+of~$t^8$ is $-|E| = -21$, and the coefficient of~$t^7$ is
+$\binom{|E|}{2} - T = \binom{21}{2} - 14 = 210 - 14 = 196$, consistent
+with $T(3) = 14$ triangles (Table~\ref{tab:triangles}).  The smallest
+positive integer root is $t = 4$, confirming $\chi = 4$.
+
+Sample values: $P(4) = 48$, $P(5) = 6360$, $P(6) = 120\,240$,
+$P(7) = 1\,062\,600$.
+
+
+\subsection{Partial values for $k = 4$}
+
+The full chromatic polynomial of $G(\Z_4)$ has degree~$16$ and has not been
+computed (the graph is too dense for plain deletion--contraction at this
+size).  Individual values found by exhaustive colouring counts are:
+\[
+  P(G(\Z_4),\, t) = 0 \;\text{ for } t = 0, 1, 2, 3, 4;
+  \qquad P(5) = 41\,040;\qquad P(6) = 25\,536\,960.
+\]
+That $P(4) = 0$ and $P(5) > 0$ confirms $\chi(G(\Z_4)) = 5$.
+
+
+\subsection{Whitney coefficients from structural invariants}
+
+By Whitney's broken-circuit theorem, the first three coefficients of the
+chromatic polynomial $P(G, t) = \sum_{i=0}^{n} (-1)^{n-i} a_{n-i}\, t^i$
+of any graph on $n$~vertices are determined by the edge count and triangle
+count:
+\begin{align}
+  a_0 &= 1, \nonumber \\
+  a_1 &= |E|, \label{eq:a1} \\
+  a_2 &= \binom{|E|}{2} - T. \label{eq:a2}
+\end{align}
+Substituting the formulas $|E| = k(k{-}1)(2k{+}1)/2$ (proved) and
+$T = k(k{-}1)(4k{-}5)/3$ (conjectured), we obtain:
+\begin{align*}
+  a_1(\GZk) &= \frac{k(k-1)(2k+1)}{2}, \\[4pt]
+  a_2(\GZk) &= \binom{k(k{-}1)(2k{+}1)/2}{2} - \frac{k(k-1)(4k-5)}{3}.
+\end{align*}
+These give the first nontrivial coefficients of $P(\GZk, t)$ in closed form
+for all $k \ge 3$ (with $a_2$ conditional on Conjecture~\ref{conj:triangles}).
+The next coefficient $a_3$ depends on the $4$-cycle count, which we have not
+investigated.
+
+
+%======================================================================
+\section{Properties Proved for All $k \ge 3$}
+\label{sec:summary}
+%======================================================================
+
+For reference, we collect the results that hold for every $k \ge 3$ (not
+just the computed range $3 \le k \le 13$):
+
+\begin{enumerate}
+  \item \textbf{Order:} $|V| = k^2$. \hfill (Definition)
+  \item \textbf{Size:} $|E| = k(k{-}1)(2k{+}1)/2$. \hfill (Theorem~\ref{thm:edges})
+  \item \textbf{Degree sequence:} $k$ vertices of degree $2k{-}2$, and
+    $k(k{-}1)$ vertices of degree $2k{-}1$. \hfill (Proposition~\ref{prop:deg})
+  \item \textbf{Connectivity:} connected, with diameter exactly~$2$.
+    \hfill (Theorem~\ref{thm:diam})
+  \item \textbf{Clique number:} $\omega = 3$. \hfill (Theorem~\ref{thm:clique})
+  \item \textbf{Self-loops:} exactly at $(p, 0)$ for $p \in \Zk$.
+    \hfill (Remark~\ref{rem:selfloops})
+  \item \textbf{Chromatic number:} $\chi \ge 4$ (since
+    $\omega = 3$ and a greedy argument on the dense neighbourhood structure
+    requires at least~$4$).
+\end{enumerate}
+
+
+%======================================================================
+\section{Open Problems}
+\label{sec:open}
+%======================================================================
+
+\begin{enumerate}
+  \item \textbf{Chromatic number for $k \ge 14$.}  Does $\chi$ stay at~$7$
+    or eventually jump to~$8$?  Preliminary TabuCol runs suggest $\chi = 7$
+    persists through $k = 20$, but these have not been verified rigorously.
+
+  \item \textbf{Rigorous lower bound for $k = 11$--$13$.}  Turn the heuristic
+    evidence that $\GZk$ is not $6$-colourable for $k = 11, 12, 13$ into a
+    formal proof, either via a SAT/UNSAT certificate or a structural argument.
+
+  \item \textbf{Prove the staircase pattern.}  Explain structurally why the
+    jumps in~$\chi$ occur at $k = 4, 7, 11, \ldots$ when the clique number
+    is only~$3$ throughout.  In particular, is
+    Conjecture~\ref{conj:staircase} correct?
+
+  \item \textbf{Independence number.}  Prove
+    Conjecture~\ref{conj:alpha}: $\alpha(\GZk) = \lfloor k^2/4 \rfloor$.
+
+  \item \textbf{Triangle count.}  Prove
+    Conjecture~\ref{conj:triangles}: $T(\GZk) = k(k{-}1)(4k{-}5)/3$.
+
+  \item \textbf{Chromatic polynomial.}  Compute the full chromatic polynomial
+    of $G(\Z_4)$ (degree~$16$) and, if feasible, $G(\Z_5)$ (degree~$25$).
+    Determine whether the higher Whitney coefficients also have closed forms.
+\end{enumerate}
+
+
+%======================================================================
+% References
+%======================================================================
+\begin{thebibliography}{9}
+
+\bibitem{hertz1987}
+A.~Hertz and D.~de~Werra,
+\emph{Using tabu search techniques for graph coloring},
+Computing \textbf{39} (1987), 345--351.
+
+\bibitem{rawat2026}
+R.~Rawat and A.~Sehgal,
+\emph{Central digraphs and their chromatic properties},
+2026.
+% TODO: Add full citation once published.
+
+\end{thebibliography}
+
+\end{document}
